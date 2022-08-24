@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Payload } from './models/payload';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'apod';
+  payloads: Payload[] = [];
 }

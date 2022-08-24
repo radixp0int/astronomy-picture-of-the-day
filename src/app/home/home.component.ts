@@ -1,55 +1,64 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ApodService } from '../services/apod.service';
-import { Payload} from '../models/payload';
+import { Payload } from '../models/payload';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: 'home.component.html',
+  styleUrls: ['home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  payloads: Payload[] = [];
 
-payload: any = [];
+  @Input() site: string = 'YouTube';
+  @Input() key: string = "";
 
-@Input() site: string = 'YouTube';
-@Input() key: string | null = null;
+  videoUrl: SafeResourceUrl = '';
 
-videoUrl: SafeResourceUrl = '';
+  //payload: Payload[] = [];
 
-//payload: Payload[] = [];
-
-  constructor(private apodService: ApodService, private sanitizer: DomSanitizer) { }
+  constructor(
+    private apodService: ApodService,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
-    this.getPhoto();
+    this.getPhotos();
   }
 
-  getPhoto(): void {
-    this.apodService.getPhoto().subscribe((response: Payload[]) => {
+  getPhotos(): void {
+    this.apodService.getPhotos().subscribe((response: Payload[]) => {
       console.log(response);
-      this.payload = response;
-      // this.key = this.payload.url.substring(this.payload.lastIndexOf('/') + 1);
-      var parts = this.payload.url.split('/');
-      this.key = parts.pop();
-      console.log('KEY ' + this.key);
-      this.videoUrl = this.getSafeUrl('https://www.youtube.com/embed/' + this.key);
+      this.payloads = response;
+                // this.key = this.payloads.substring(this.payload.lastIndexOf('/') + 1);
+                // var parts = this.payloads[0].hdurl.split('/');
+                // // this.key = parts.pop();
+                // console.log('KEY ' + this.key);
+                // this.videoUrl = this.getSafeUrl(
+                //   'https://www.youtube.com/embed/' + this.key
+                // );
     });
   }
-    getSafeUrl(url: string) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-    
-  }
 
- 
-
-  // getPhoto(): void {
-  //   this.apodService.getPhoto().subscribe((response: any) => {
-  //     console.log(response);
-  //     this.payload = response;
-  //   });
+  // getVideoUrl(payloadItems: Payload[]) {
+  //   this.key = payloadItems.forEach(payload => payload. .substring(this.payload.lastIndexOf('/') + 1);
+  //     var parts = this.payloads[0].hdurl.split('/');
+  //     // this.key = parts.pop();
+  //     console.log('KEY ' + this.key);
+  //     this.videoUrl = this.getSafeUrl(
+  //       'https://www.youtube.com/embed/' + this.key
+  //     );
   // }
 
+  getSafeUrl(url: string) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+}
 
-
+// getPhoto(): void {
+//   this.apodService.getPhoto().subscribe((response: any) => {
+//     console.log(response);
+//     this.payload = response;
+//   });
+// }
